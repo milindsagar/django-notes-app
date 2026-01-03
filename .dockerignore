@@ -1,0 +1,6 @@
+cd /home/ubuntu/jenkins/workspace/Docker\ Lifecycle/
+nano .dockerignore
+data/mysql/db
+*.pyc
+__pycache__/
+.env
