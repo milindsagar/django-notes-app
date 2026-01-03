@@ -4,9 +4,15 @@ FROM python:3.9-slim
 # Set working directory
 WORKDIR /app
 
-# System dependencies (mysqlclient साठी)
+# System dependencies (mysqlclient + networking tools)
 RUN apt-get update \
-    && apt-get install -y gcc default-libmysqlclient-dev pkg-config curl \
+    && apt-get install -y \
+        gcc \
+        default-libmysqlclient-dev \
+        pkg-config \
+        curl \
+        net-tools \
+        iproute2 \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first (better caching)
@@ -20,4 +26,8 @@ RUN pip install --upgrade pip \
 # Copy project files
 COPY . .
 
+# Expose application port
 EXPOSE 8000
+
+# Start Django app using Gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "notesapp.wsgi:application"]
